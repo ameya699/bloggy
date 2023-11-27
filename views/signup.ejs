@@ -39,25 +39,45 @@ border-bottom-right-radius: .3rem;
                   <div class="text-center">
                     <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/lotus.webp"
                       style="width: 185px;" alt="logo">
-                    <h4 class="mt-1 mb-5 pb-1">Welcome to Bloggy</h4>
+                    <h4 class="mt-1 mb-5 pb-1">Sign up to Bloggy</h4>
+                    <% if (error) { %>
+                      <p><%=message %> <a href="/login">Click here to log in</a></p>
+                     <% } %>
                   </div>
   
-                  <form>
-                    <p>Sign Up</p>
+                  <form method="post" action="/signup">
+
   
                     <div class="form-outline mb-4">
-                      <input type="email" id="form2Example11" class="form-control"
-                        placeholder="Email address" />
-                      <label class="form-label" for="form2Example11">Username</label>
+                      <label class="form-label" for="form2Example11">Firstname</label>
+                      <input type="text" id="form2Example11" class="form-control"
+                        placeholder="firstname" name="firstname"/>
+                      
                     </div>
   
                     <div class="form-outline mb-4">
-                      <input type="password" id="form2Example22" class="form-control" />
-                      <label class="form-label" for="form2Example22">Password</label>
+                      <label class="form-label" for="form2Example22">Lastname</label>
+                      <input type="text" id="form2Example22" class="form-control"
+                        placeholder="lastname" name="lastname"/>
+                    </div>
+
+                    <div class="form-outline mb-4">
+                      <label class="form-label" for="form2Example33">Mobile no</label>
+                      <input type="text" id="form2Example33" class="form-control" placeholder="Mobile no" name="mobile"/>
+                    </div>
+
+                    <div class="form-outline mb-4">
+                      <label class="form-label" for="form2Example44">Email Address</label>
+                      <input type="text" id="form2Example44" class="form-control" placeholder="Email Address" name="email"/>
+                    </div>
+
+                    <div class="form-outline mb-4">
+                      <label class="form-label" for="form2Example55">Password</label>
+                      <input type="password" id="form2Example55" class="form-control" placeholder="Password" name="password"/>
                     </div>
   
                     <div class="text-center pt-1 mb-5 pb-1">
-                      <button type="button" class="btn btn-outline-danger">Sign up</button> 
+                      <button type="submit" class="btn btn-outline-danger">Sign up</button> 
 
               
                     </div>
