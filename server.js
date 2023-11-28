@@ -4,10 +4,12 @@ const PORT=process.env.PORT || 5000;
 const bcrypt=require("bcrypt");
 const bloggydbconnection=require("./config/dbConnection");
 const userSchema=require("./models/user");
+const blogSchema=require("./models/blog");
 //initializing variables for logins , etc.
 var isloggedin=false;
 var emailid="";
 const saltrounds=10;
+var blogscollection=null;
  
 const initializeobj={firstname:"",lastname:"",email:""}
 app.set("view engine","ejs");
@@ -19,9 +21,11 @@ app.listen((PORT), ()=>{
 })
 
 
-app.get("/",(req,res)=>{
+app.get("/",async(req,res)=>{
     if(isloggedin){
-        res.render("index",{emailid:emailid,userdetails:initializeobj});
+         blogscollection=await blogSchema.find();
+     
+        res.render("index",{emailid:emailid,userdetails:initializeobj,blogscollection:blogscollection});
     }
     else{ 
         res.render("login",{error:false,message:""});
@@ -87,7 +91,7 @@ app.post("/login",async(req,res)=>{
     if(isauthorized){
         isloggedin=true;
         emailid=emailId;
-        res.render("index",{userdetails:userdetails,emailid:emailId});
+        res.redirect("/");
     }else{
         emailid="";
         isloggedin=false;
@@ -100,4 +104,26 @@ app.get("/logout",(req,res)=>{
     isloggedin=false;
     emailid="";
     res.redirect("/");
+})
+
+
+app.get("/createblog",async(req,res)=>{
+    const heading="Test heading1";
+    const content="Test content1";
+    
+    if(isloggedin){
+        const createdbyName=await userSchema.findOne({email:emailid});
+      const response=  await blogSchema.create({
+            heading:heading,
+            content:content,
+            createdby:createdbyName.firstname+" "+createdbyName.lastname,
+            email:emailid
+        })
+        console.log(response);
+        res.redirect("/")
+    }
+})
+
+app.get("*",(req,res)=>{
+    res.send("<h1>Oops not allowed</h1>")
 })

@@ -1,8 +1,34 @@
 <%- include("header") -%>
 
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 <div style="padding-top: 50px;">
 
     <p>logged in <%=emailid%></p>
     <a href="/logout">Log out </a>
+    <div class="card-group"  style="display: flex;flex-wrap: wrap;padding: 2vh 2vh 0 2vh;column-gap: 3vh; row-gap: 2vh;" >
+        <%blogscollection.forEach(blog => {%>
+        <div style="width: 300px;">
+            <div class="card" >
+                <div style="display: flex;column-gap: 3vh;">
+                <img class="card-img-top" src="https://cdn-icons-png.flaticon.com/256/1077/1077114.png" style="height: 48px;width: 40px;padding:1vh 0 1vh 1vh;" alt="user profile photo">
+                
+                    <% if (blog.email===emailid) { %>
+                        <p style="align-self: flex-end;">Created by you</p>
+                    <% } else{%>
+                        <p style="align-self: flex-end;"><a href="mailto:<%=blog.email%>"><%=blog.createdby %></a></p>
+                    <%}%>
+                    
+            </div>
+               <div class="card-body">
+                  <h5 class="card-title"><%= blog.heading%></h5>
+                  <p class="card-text"><small class="text-muted">published 3 mins ago</small></p>
+                </div>
+            </div>
+        </div>
+        <% }); %>
+
+
+        
+      </div>
 
 </div>

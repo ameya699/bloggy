@@ -4,23 +4,24 @@ const mongoose=require("mongoose");
 const userSchema=new mongoose.Schema({
     firstname:{
         type:String,
-        required:false
+        required:true
     },
     lastname:{
         type:String,
-        required:false,
+        required:true,
     },
     mobile:{
         type:String,
-        required:false,
+        required:true,
+        default:"NA"
     },
     email:{
         type:String,
-        required:false,
+        required:true,
     }, 
     password:{
         type:String,
-        required:false,
+        required:true,
     }
 })
 
