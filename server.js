@@ -5,14 +5,26 @@ const bcrypt=require("bcrypt");
 const bloggydbconnection=require("./config/dbConnection");
 const userSchema=require("./models/user");
 const blogSchema=require("./models/blog");
-//initializing variables for logins , etc.
-var isloggedin=false;
-var emailid="";
+const session=require("express-session");
+const cookieParser = require("cookie-parser");
+var createTextVersion = require("textversionjs");
+
+const cookiesecret="bloggycookiesecret";
 const saltrounds=10;
-var blogscollection=null;
+
  
-const initializeobj={firstname:"",lastname:"",email:""}
+
 app.set("view engine","ejs");
+app.use(cookieParser());
+app.use(session({
+    secret:cookiesecret,
+    resave:false,
+    saveUninitialized:true,
+    cookie:{
+        secure:false,maxAge:6000000
+    }
+}))
+
 
 app.use(express.urlencoded({extended:false}));
 app.listen((PORT), ()=>{
@@ -22,10 +34,9 @@ app.listen((PORT), ()=>{
 
 
 app.get("/",async(req,res)=>{
-    if(isloggedin){
-         blogscollection=await blogSchema.find();
-     
-        res.render("index",{emailid:emailid,userdetails:initializeobj,blogscollection:blogscollection});
+    if(req.session.user){
+        const blogscollection=await blogSchema.find();
+        res.render("index",{emailid:req.session.user.email,blogscollection:blogscollection});
     }
     else{ 
         res.render("login",{error:false,message:""});
@@ -40,8 +51,8 @@ app.get("/signup",(req,res)=>{
 
 
 app.get("/signup",(req,res)=>{
-    if(isloggedin){
-        res.render("/");
+    if(req.session.user){
+        res.redirect("/");
     }
     else{
         res.render("/signup");
@@ -58,7 +69,6 @@ app.post("/signup",async(req,res)=>{
 
 const isexists=await userSchema.findOne({email:email});
 if(isexists){
-    emailid="";
     res.render("signup",{error:true,message:"Email already exists."})
 }
 
@@ -71,12 +81,15 @@ const salt = await bcrypt.genSalt(saltrounds);
         email:email,
         password:hashedpwd,
     }])
-    emailid=email;
+    
     res.render("login",{error:false,message:"Signed up successfully, please login in again!"});
 })
 
 app.get("/login",(req,res)=>{
-    res.render("login",{error:false,message:""});
+    if(req.session.user){
+        res.redirect("/index");
+    }
+    res.render("login",{error:false,message:"",emailid:null});
 })
 
 app.post("/login",async(req,res)=>{
@@ -85,41 +98,73 @@ app.post("/login",async(req,res)=>{
     const password=req.body.password;
     //get password from db and compare with given password
     const userdetails=await userSchema.findOne({email:emailId});
-    console.log(userdetails.password);
-    const isauthorized= await bcrypt.compare(password,userdetails.password);
-    console.log(isauthorized);
-    if(isauthorized){
-        isloggedin=true;
-        emailid=emailId;
-        res.redirect("/");
-    }else{
-        emailid="";
-        isloggedin=false;
-        res.render("login",{error:true,message:"invalid credentials"});
+    if(userdetails){
+        const isauthorized= await bcrypt.compare(password,userdetails.password);
+        console.log(isauthorized);
+        if(isauthorized){
+            req.session.user={email:userdetails.email};
+            res.redirect("/");
+        }else{
+            res.render("login",{error:true,message:"invalid credentials"});
+        }
     }
+    else{
+        res.render("login",{error:true,message:"user doesn't exists"})
+    }
+    
 
 });
 
 app.get("/logout",(req,res)=>{
-    isloggedin=false;
-    emailid="";
+    req.session.destroy();
     res.redirect("/");
 })
 
+app.get("/readblog/:id",async(req,res)=>{
+    if(req.session.user){
+        const blog=await blogSchema.findOne({_id:req.params.id});
+        if(blog){
 
-app.get("/createblog",async(req,res)=>{
-    const heading="Test heading1";
-    const content="Test content1";
+            res.render("blog",{blog:blog,loggeduser:req.session.user})
+        }
+        else{
+            res.redirect("/");
+        }
+    }
+    else{
+        res.redirect("/")
+    }
+})
+
+app.get("/createblog",(req,res)=>{
+    if(req.session.user){
+        res.render("createblog");
+    }
+    else{
+        res.redirect("/");
+    }
     
-    if(isloggedin){
-        const createdbyName=await userSchema.findOne({email:emailid});
-      const response=  await blogSchema.create({
+    
+})
+
+app.post("/createblog",async(req,res)=>{
+    if(req.session.user){
+        const heading=req.body.heading;
+        const content=req.body.content;
+        const plaincontent=createTextVersion(content).trim().substring(0,50);
+        const createdbyName=await userSchema.findOne({email:req.session.user.email});
+        const result=  await blogSchema.create({
             heading:heading,
             content:content,
             createdby:createdbyName.firstname+" "+createdbyName.lastname,
-            email:emailid
+            email:req.session.user.email,
+            plaincontent:plaincontent
         })
-        console.log(response);
+        if(result){
+            res.redirect("/");
+        }
+    }
+    else{
         res.redirect("/")
     }
 })
@@ -127,3 +172,4 @@ app.get("/createblog",async(req,res)=>{
 app.get("*",(req,res)=>{
     res.send("<h1>Oops not allowed</h1>")
 })
+  

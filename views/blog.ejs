@@ -1,0 +1,39 @@
+<%- include("header") -%>
+<style>
+    .material-symbols-outlined{
+        cursor: pointer;
+    }
+</style>
+
+<a href="/createblog" style="text-decoration: none;color: black;display: flex;flex-wrap: wrap;"><span class="material-symbols-outlined" style="font-size: 50px;position: fixed;z-index: 1;right: 0;bottom: 0;padding:0 5vh 5vh 0;">
+    add_circle
+    </span></a>
+<div style="width: auto;
+min-height: 500px;
+height: fit-content;
+flex-shrink: 0;border-radius: 19px;
+background: #F7E6C4;margin: 1.6rem;">
+<div style="width: auto; border-radius: 19px 19px 0px 0px;
+background:linear-gradient(to right, #ee7724, #d89d36);display: flex;column-gap: 4px;column-gap: 4vh;justify-content: flex-start;flex-wrap: wrap;padding: 1.6vh;">
+<span class="material-symbols-outlined" style="align-self: center;font-size: 5vh;" onclick="history.back()">
+    arrow_back
+    </span>
+    
+<img class="card-img-top" src="https://cdn-icons-png.flaticon.com/256/1077/1077114.png" style="height: 48px;width: 40px;padding:1vh 0 1vh 1vh;" alt="user profile photo">
+<% if (blog.email===loggeduser.email) { %>
+    <p style="align-self: flex-end;text-align:right">published by you</p>
+<% }else{%>
+    <p style="align-self: flex-end;">Created by <%= blog.createdby%> </p>
+ <%}   %>
+<% if (blog.modifiedtime) { %>
+ <p>last updated on <%=blog.modifiedtime%></p>
+<% } else{%>
+<p style="align-self: flex-end;margin-left: auto;padding-right: 2vh;font-size: 10px;">published on <%=blog.publishtime.toString().split("GMT")[0]%></p>
+<%}%>
+</div>
+<div style="padding: 12px;">
+    <h2 style="font-size: 22px;text-align: center;"><%=blog.heading%></h2>
+    <div ><%-blog.content%></div>
+    </div>
+ 
+</div>

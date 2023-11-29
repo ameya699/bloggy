@@ -10,6 +10,9 @@ const blogSchema=new mongoose.Schema({
         type:String,
         required:false
     },
+    plaincontent:{
+        type:String,
+    },
     publishtime:{
         type:Date,
         default:new Date()
