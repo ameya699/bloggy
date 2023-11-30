@@ -21,7 +21,7 @@ app.use(session({
     resave:false,
     saveUninitialized:true,
     cookie:{
-        secure:false,maxAge:6000000
+        secure:false,maxAge:3600000
     }
 }))
 
@@ -66,7 +66,9 @@ app.post("/signup",async(req,res)=>{
     const firstname=req.body.firstname.trim();
     const lastname=req.body.lastname.trim();
     const mobile=req.body.mobile.trim() || "NA";
-
+    if((password && email && firstname && lastname)==undefined) {
+        res.render("login",{error:true,message:"Empty Credentials are not allowed"});
+    }
 const isexists=await userSchema.findOne({email:email});
 if(isexists){
     res.render("signup",{error:true,message:"Email already exists."})
@@ -74,13 +76,21 @@ if(isexists){
 
 const salt = await bcrypt.genSalt(saltrounds);
     const hashedpwd = await bcrypt.hash(password, salt);
-    await userSchema.create([{
+   try{
+    const iscreated= await userSchema.create([{
         firstname:firstname,
         lastname:lastname,
         mobile:mobile,
         email:email,
         password:hashedpwd,
     }])
+    if(!iscreated){
+        res.render("login",{error:true,message:"Empty Credentials are not allowed"});
+    }
+   }
+   catch{
+    res.render("login",{error:true,message:"Empty Credentials are not allowed"});
+   }
     
     res.render("login",{error:false,message:"Signed up successfully, please login in again!"});
 })
@@ -179,7 +189,7 @@ app.get("/editblog/:id",async(req,res)=>{
 
 app.post("/editblog/:id",async(req,res)=>{
     if(req.session.user){
-        const plaincontent=createTextVersion(req.body.content).trim().substring(0,50);
+        const plaincontent=createTextVersion(req.body.content).trim().substring(0,10);
         const isupdated=await blogSchema.updateOne({_id:req.params.id},{
             heading:req.body.heading,
             content:req.body.content,
@@ -197,16 +207,24 @@ app.post("/editblog/:id",async(req,res)=>{
 
 app.get("/deleteblog/:id",async(req,res)=>{
     if(req.session.user){
-        const isdeleted=await blogSchema.findByIdAndDelete(req.params.id);
-        console.log(req.params);
-        if(isdeleted){
-            res.redirect("/");
+        const iscurrentuser=await userSchema.findOne({email:req.session.user.email});
+        if(iscurrentuser){
+            const isdeleted=await blogSchema.findByIdAndDelete(req.params.id);
+            console.log(req.params);
+            if(isdeleted){
+                res.redirect("/");
+            }
+            else{
+                res.redirect("/error");
+            }
         }
         else{
             res.redirect("/error");
         }
+        
     }
     else{
+        
         res.redirect("/")
     }
 })
