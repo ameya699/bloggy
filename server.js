@@ -36,7 +36,8 @@ app.listen((PORT), ()=>{
 app.get("/",async(req,res)=>{
     if(req.session.user){
         const blogscollection=await blogSchema.find();
-        res.render("index",{emailid:req.session.user.email,blogscollection:blogscollection});
+        const currentUser=await userSchema.findOne({email:req.session.user.email})
+        res.render("index",{emailid:req.session.user.email,blogscollection:blogscollection,currentUser});
     }
     else{ 
         res.render("login",{error:false,message:""});
