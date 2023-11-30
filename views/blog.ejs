@@ -3,7 +3,19 @@
     .material-symbols-outlined{
         cursor: pointer;
     }
+
+
+
 </style>
+<head>
+    <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+    
+</head>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+
+
+
 
 <a href="/createblog" style="text-decoration: none;color: black;display: flex;flex-wrap: wrap;"><span class="material-symbols-outlined" style="font-size: 50px;position: fixed;z-index: 1;right: 0;bottom: 0;padding:0 5vh 5vh 0;">
     add_circle
@@ -15,12 +27,16 @@ flex-shrink: 0;border-radius: 19px;
 background: #F7E6C4;margin: 1.6rem;">
 <div style="width: auto; border-radius: 19px 19px 0px 0px;
 background:linear-gradient(to right, #ee7724, #d89d36);display: flex;column-gap: 4px;column-gap: 4vh;justify-content: flex-start;flex-wrap: wrap;padding: 1.6vh;">
-<span class="material-symbols-outlined" style="align-self: center;font-size: 5vh;" onclick="history.back()">
+<span class="material-symbols-outlined" style="align-self: center;font-size: 5vh;" onclick='window.location="/"'>
     arrow_back
     </span>
     
 <img class="card-img-top" src="https://cdn-icons-png.flaticon.com/256/1077/1077114.png" style="height: 48px;width: 40px;padding:1vh 0 1vh 1vh;" alt="user profile photo">
 <% if (blog.email===loggeduser.email) { %>
+    <a href="/editblog/<%= blog._id %>" style="text-decoration: none;color: black;align-self: flex-end;"><span class="material-symbols-outlined" style="font-size: 40px;align-self: center;" id="editblog">
+        edit
+        </span>
+    </a>
     <p style="align-self: flex-end;text-align:right">published by you</p>
 <% }else{%>
     <p style="align-self: flex-end;">Created by <%= blog.createdby%> </p>

@@ -1,0 +1,51 @@
+<%- include("header") -%>
+<head>
+    <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+    
+</head>
+
+
+<div style="padding: 4vh;">
+  <div style="display: flex;padding-bottom: 2rem;">
+    <span class="material-symbols-outlined" style=" font-size: 5vh;cursor: pointer;" onclick="history.back()">
+      arrow_back
+      </span>
+    <h3 >Edit blog</h3>
+  </div>
+    <form method="post" action="/editblog/<%=blog._id%>">
+        
+        <div class="form-group" style="display: flex;flex-direction: column;row-gap: 2vh;padding-bottom: 10px;">
+            <div style="display: flex;flex-direction: column;row-gap: 1.2vh;">
+                <label for="heading" id="labelheading">Heading</label>
+                <input type="text" class="form-control" id="heading" name="heading" placeholder="Enter heading">
+                <script>
+            
+                    const setheading=document.getElementById("heading");
+                    setheading.setAttribute('value',`<%=blog.heading%>`);
+                </script>
+            </div>
+            <div>
+              <div style="display: flex;flex-direction: column;row-gap: 1.2vh;">
+                <label for="content">Content</label>
+                <textarea  class="form-control" id="content" name="content" placeholder="start expressing here..."></textarea>
+                <script>
+            
+                    const setcontent=document.getElementById("content");
+                    setcontent.textContent=`<%-blog.content%>`
+                    console.log()
+                </script>
+              </div>
+          <script>
+            CKEDITOR.replace("content");
+          </script>
+        </div>
+    <div style="display: flex;justify-content: space-between;">
+        <button type="submit" class="btn btn-outline-primary">Update</button>
+        
+        <div >
+            <button  class="btn btn-outline-secondary">Cancel</button>
+           <button class="btn btn-outline-danger" type="button" onclick='window.location="/deleteblog/<%=blog._id%>"'>Delete</button>
+         </div>
+        </div>
+      </form>
+</div>

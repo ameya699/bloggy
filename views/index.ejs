@@ -40,13 +40,17 @@
                     <%}%>
                     
             </div>
-               <div class="card-body" style="height: 10rem;">
+               <div class="card-body" >
                   <h5 class="card-title"><%= blog.heading%></h5>
-<div class="card-content">   <%=blog.plaincontent  %>    </div>
+<div class="card-content">   <%=blog.plaincontent%>    </div>
 <p style="display: flex; column-gap: 1vh;text-align: center;">Read full blog<a style="text-decoration: none;" href="/readblog/<%=blog._id  %>"><span class="material-symbols-outlined" style="text-align: center;">
     arrow_forward
 </span></a></p>
-<p class="card-text" style="text-align: end;"><small class="text-muted">published at <%= blog.publishtime.toString().split("GMT")[0]%></small></p>
+<% if (blog.modifiedtime) { %>
+    <p class="card-text" style="text-align: end;"><small class="text-muted">last updated on <%= blog.publishtime.toString().split("GMT")[0]%></small></p>
+<% } else{%>
+    <p class="card-text" style="text-align: end;"><small class="text-muted">published on <%= blog.publishtime.toString().split("GMT")[0]%></small></p>
+    <%}%>
                 </div>
                
             </div>

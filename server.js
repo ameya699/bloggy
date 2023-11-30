@@ -169,7 +169,49 @@ app.post("/createblog",async(req,res)=>{
     }
 })
 
+app.get("/editblog/:id",async(req,res)=>{
+    if(req.session.user){
+        const blogdata=await blogSchema.findOne({_id:req.params.id});
+        
+        res.render("editblog",{blog:blogdata,loggeduser:req.session.user})
+    }
+})
+
+app.post("/editblog/:id",async(req,res)=>{
+    if(req.session.user){
+        const plaincontent=createTextVersion(req.body.content).trim().substring(0,50);
+        const isupdated=await blogSchema.updateOne({_id:req.params.id},{
+            heading:req.body.heading,
+            content:req.body.content,
+            plaincontent:plaincontent,
+            modifiedtime:new Date()
+        })
+        if(isupdated){
+            res.redirect(`/readblog/${req.params.id}`)
+        }
+        else{
+            res.redirect("/error");
+        }
+    }
+})
+
+app.get("/deleteblog/:id",async(req,res)=>{
+    if(req.session.user){
+        const isdeleted=await blogSchema.findByIdAndDelete(req.params.id);
+        console.log(req.params);
+        if(isdeleted){
+            res.redirect("/");
+        }
+        else{
+            res.redirect("/error");
+        }
+    }
+    else{
+        res.redirect("/")
+    }
+})
+
 app.get("*",(req,res)=>{
-    res.send("<h1>Oops not allowed</h1>")
+    res.render("errorpage");
 })
   
