@@ -59,7 +59,7 @@
     arrow_forward
 </span></a></p>
 <% if (blog.modifiedtime) { %>
-    <p class="card-text" style="text-align: end;color: white;"><small class="text-muted">last updated on <%= blog.publishtime.toString().split("GMT")[0]%></small></p>
+    <p class="card-text" style="text-align: end;color: white;"><small class="text-muted">last updated on <%= blog.modifiedtime.toString().split("GMT")[0]%></small></p>
 <% } else{%>
     <p class="card-text" style="text-align: end;color: white;"><small class="text-muted">published on <%= blog.publishtime.toString().split("GMT")[0]%></small></p>
     <%}%>

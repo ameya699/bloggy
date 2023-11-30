@@ -8,7 +8,6 @@ const blogSchema=require("./models/blog");
 const session=require("express-session");
 const cookieParser = require("cookie-parser");
 var createTextVersion = require("textversionjs");
-
 const cookiesecret="bloggycookiesecret";
 const saltrounds=10;
 

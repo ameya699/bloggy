@@ -40,7 +40,7 @@ background:linear-gradient(to right, #72a2ca,#1b629b);;display: flex;column-gap:
     <p style="align-self: flex-end;">Created by <%= blog.createdby%> </p>
  <%}   %>
 <% if (blog.modifiedtime) { %>
- <p>last updated on <%=blog.modifiedtime%></p>
+ <p style="align-self: flex-end;margin-left: auto;padding-right: 2vh;font-size: 10px;color: white;letter-spacing: 1px;">last updated on <%=blog.modifiedtime.toString().split("GMT")[0]%></p>
 <% } else{%>
 <p style="align-self: flex-end;margin-left: auto;padding-right: 2vh;font-size: 10px;color: white;letter-spacing: 1px;">published on <%=blog.publishtime.toString().split("GMT")[0]%></p>
 <%}%>
