@@ -35,8 +35,16 @@ app.listen((PORT), ()=>{
 app.get("/",async(req,res)=>{
     if(req.session.user){
         const blogscollection=await blogSchema.find();
+
+        //adding plain heading in the b log collection
+        var blogs=blogscollection.map((blog)=>{
+            return {_id:blog._id,heading:blog.heading,content:blog.content,plaincontent:blog.plaincontent,plainheading:blog.heading,cretedby:blog.createdby,email:blog.email,publishtime:blog.publishtime,modifiedtime:blog.modifiedtime!==undefined?blog.modifiedtime:null};
+        });
+
+
+        
         const currentUser=await userSchema.findOne({email:req.session.user.email})
-        res.render("index",{emailid:req.session.user.email,blogscollection:blogscollection,currentUser});
+        res.render("index",{emailid:req.session.user.email,blogscollection:blogs,currentUser});
     }
     else{ 
         res.render("login",{error:false,message:""});
@@ -65,7 +73,7 @@ app.post("/signup",async(req,res)=>{
     const email=req.body.email.trim();
     const firstname=req.body.firstname.trim();
     const lastname=req.body.lastname.trim();
-    const mobile=req.body.mobile.trim() || "NA";
+    const mobile=req.body.mobile.toString().trim() || "NA";
     if((password && email && firstname && lastname)==undefined) {
         res.render("login",{error:true,message:"Empty Credentials are not allowed"});
     }
@@ -137,12 +145,10 @@ app.get("/readblog/:id",async(req,res)=>{
 
             res.render("blog",{blog:blog,loggeduser:req.session.user})
         }
-        else{
-            res.redirect("/");
-        }
     }
     else{
-        res.redirect("/")
+        res.render
+        ("errorpage")
     }
 })
 
@@ -151,7 +157,7 @@ app.get("/createblog",(req,res)=>{
         res.render("createblog");
     }
     else{
-        res.redirect("/");
+        res.render("errorpage  ");
     }
     
     
@@ -175,7 +181,7 @@ app.post("/createblog",async(req,res)=>{
         }
     }
     else{
-        res.redirect("/")
+        res.render("errorpage")
     }
 })
 
@@ -184,6 +190,9 @@ app.get("/editblog/:id",async(req,res)=>{
         const blogdata=await blogSchema.findOne({_id:req.params.id});
         
         res.render("editblog",{blog:blogdata,loggeduser:req.session.user})
+    }
+    else{
+        res.render("errorpage");
     }
 })
 
@@ -200,8 +209,11 @@ app.post("/editblog/:id",async(req,res)=>{
             res.redirect(`/readblog/${req.params.id}`)
         }
         else{
-            res.redirect("/error");
+            res.render("errorpage");
         }
+    }
+    else{
+        res.render("errorpage")
     }
 })
 
@@ -225,11 +237,16 @@ app.get("/deleteblog/:id",async(req,res)=>{
     }
     else{
         
-        res.redirect("/")
+        res.redirect("errorpage")
     }
 })
 
 app.get("*",(req,res)=>{
-    res.render("errorpage");
+    if(req.session.user){
+        res.redirect("/");
+    }
+    else{
+        res.render("errorpage");
+    }
 })
   

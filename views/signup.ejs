@@ -28,14 +28,14 @@ border-bottom-right-radius: .3rem;
 
 
 
-<section class="h-100 gradient-form" style="padding-top: 5vh;">
-    <div class="container py-5 h-80">
-      <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col-xl-10">
-          <div class="card rounded-3 text-black">
-            <div class="row g-0">
-              <div class="col-lg-6">
-                <div class="card-body p-md-5 mx-md-4">
+<section class="h-100 gradient-form">
+  <div class="container py-4 h-80">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-xl-10">
+        <div class="card rounded-3 text-black">
+          <div class="row g-0">
+            <div class="col-lg-6">
+              <div class="card-body p-sm-1 mx-md-4">
   
                   <div class="text-center">
                     <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/lotus.webp"
@@ -64,7 +64,15 @@ border-bottom-right-radius: .3rem;
 
                     <div class="form-outline mb-4">
                       <label class="form-label" for="form2Example33">Mobile no</label>
-                      <input type="text" id="form2Example33" class="form-control" placeholder="Mobile no" name="mobile"/>
+                      <input type="number" id="form2Example33" class="form-control" placeholder="Mobile no" name="mobile"/>
+                      <script>
+                        if(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream)
+                          {
+                              var inputs = document.querySelectorAll('input[type="number"]');
+                              for(var i = inputs.length; i--;)
+                                  inputs[i].setAttribute('pattern', '\\d*');
+                          }
+                      </script>
                     </div>
 
                     <div class="form-outline mb-4">
@@ -92,8 +100,8 @@ border-bottom-right-radius: .3rem;
   
                 </div>
               </div>
-              <div class="col-lg-6 d-flex align-items-center gradient-custom-2">
-                <div class="text-white px-3 py-4 p-md-5 mx-md-4">
+              <div class="col-lg-6  d-flex align-items-center gradient-custom-2">
+                <div class="text-white px-3 py-4 p-md-5 mx-md-4" >
                   <h4 class="mb-4">Perfect place to express yourself!!!</h4>
                   <p class="small mb-0" style="font-family: 'Dancing Script', cursive;font-size: 22px;word-spacing: 2px;letter-spacing: 2px;">Step into a world where curiosity meets discovery, where words weave stories, and where ideas find their voice. At Bloggy, we're passionate about your blogs and their experiences. We believe in the power of sharing knowledge, experiences, and insights to spark inspiration and foster meaningful conversations.</p>
                 </div>
