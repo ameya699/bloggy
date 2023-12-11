@@ -35,14 +35,15 @@ app.listen((PORT), ()=>{
 app.get("/",async(req,res)=>{
     if(req.session.user){
         const blogscollection=await blogSchema.find();
+         
 
         //adding plain heading in the b log collection
         var blogs=blogscollection.map((blog)=>{
-            return {_id:blog._id,heading:blog.heading,content:blog.content,plaincontent:blog.plaincontent,plainheading:blog.heading,cretedby:blog.createdby,email:blog.email,publishtime:blog.publishtime,modifiedtime:blog.modifiedtime!==undefined?blog.modifiedtime:null};
+            return {_id:blog._id,heading:blog.heading,content:blog.content,plaincontent:blog.plaincontent,plainheading:blog.heading,createdby:blog.createdby,email:blog.email,publishtime:blog.publishtime,modifiedtime:blog.modifiedtime!==undefined?blog.modifiedtime:null};
         });
 
 
-        
+        console.log(blogs);
         const currentUser=await userSchema.findOne({email:req.session.user.email})
         res.render("index",{emailid:req.session.user.email,blogscollection:blogs,currentUser});
     }
