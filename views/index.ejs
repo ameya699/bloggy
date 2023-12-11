@@ -104,9 +104,9 @@
                 <img class="card-img-top" src="https://cdn-icons-png.flaticon.com/256/1077/1077114.png" style="height: 48px;width: 40px;padding:1vh 0 1vh 1vh;" alt="user profile photo">
                 
                     <% if (blog.email===emailid) { %>
-                        <p style="align-self: flex-end;color: white;">Created by you</p>
+                        <p style="align-self: flex-end;color: white;">Published by you</p>
                     <% } else{%>
-                        <p style="align-self: flex-end;color: white;">Created by <a href="mailto:<%=blog.email%>" style="color: white;"><%=blog.createdby %></a></p>
+                        <p style="align-self: flex-end;color: white;">Published by <a href="mailto:<%=blog.email%>" style="color: white;"><%=blog.createdby %></a></p>
                     <%}%>
                     
             </div>
